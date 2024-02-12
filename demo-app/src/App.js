@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import './App.css';
-import RenderControlClass from './adv/optimize/RenderControlClass';
-import RenderControlFunc from './adv/optimize/RenderControlFunc';
+import MyRcFieldForm from './pages/MyRcFieldForm';
+// import RenderControlClass from './adv/optimize/RenderControlClass';
+// import RenderControlFunc from './adv/optimize/RenderControlFunc';
 // import Property from './adv/hoc/Property';
 // import Extending from './adv/hoc/extending';
 // import ClassContext from './adv/context/ClassContext';
@@ -44,8 +45,10 @@ function App() {
       {/* <Property></Property>
       <Extending></Extending> */}
 
-      <RenderControlClass></RenderControlClass>
-      <RenderControlFunc></RenderControlFunc>
+      {/* <RenderControlClass></RenderControlClass>
+      <RenderControlFunc></RenderControlFunc> */}
+
+      <MyRcFieldForm></MyRcFieldForm>
     </div>
   );
 }
