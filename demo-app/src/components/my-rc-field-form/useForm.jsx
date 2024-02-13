@@ -11,8 +11,6 @@ class FormStore {
     // 校验成功/失败后执行的回调
     this.callbacks = {};
 
-    // 校验规则
-    this.rules = {};
   }
 
   //get
@@ -65,14 +63,14 @@ class FormStore {
   validate = () => {
     let err = [];
     const res = this.getFieldsValue();
-    Object.entries(this.rules).forEach(([key, val]) => {
-      if (val.length) {
-        val.forEach(rule => {
-          if (rule.required && !res[key]) {
+    this.fieldEntities.forEach(field => {
+      const { name, rules = [] } = field.props;
+      if (rules.length) {
+        rules.forEach(rule => {
+          if (rule.required && !res[name]) {
             // 必填
-            err.push({ name: key, err: rule.message })
+            err.push({ [name]: rule.message, value: res[name] })
           }
-
         })
       }
     })
@@ -99,7 +97,6 @@ class FormStore {
       registerFieldEntities: this.registerFieldEntities,
       onSubmit: this.onSubmit,
       setValidates: this.setValidates,
-      setRules: this.setRules,
     }
   }
 

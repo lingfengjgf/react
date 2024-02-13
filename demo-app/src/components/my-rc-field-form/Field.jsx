@@ -22,7 +22,6 @@ class Field extends Component {
 
   componentDidMount() {
     this.unRegisterFieldEntities = this.context.registerFieldEntities(this);
-    this.context.setRules(this.props.name, this.props.rules);
   }
 
   componentWillUnmount() {
