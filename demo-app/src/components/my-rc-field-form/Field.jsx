@@ -16,13 +16,17 @@ class Field extends Component {
       onChange: (e) => {
         const newVal = e.target.value;
         setFieldsValue({ [name]: newVal });
-        console.log(newVal);
       }
     }
   }
 
   componentDidMount() {
-    this.context.registerFieldEntities(this);
+    this.unRegisterFieldEntities = this.context.registerFieldEntities(this);
+    this.context.setRules(this.props.name, this.props.rules);
+  }
+
+  componentWillUnmount() {
+    this.unRegisterFieldEntities();
   }
 
   render() {
