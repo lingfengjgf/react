@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import './App.css';
-import MyRcFieldForm from './pages/MyRcFieldForm';
+import ReduxPage from './adv/redux/ReduxPage';
+// import MyRcFieldForm from './pages/MyRcFieldForm';
 // import RenderControlClass from './adv/optimize/RenderControlClass';
 // import RenderControlFunc from './adv/optimize/RenderControlFunc';
 // import Property from './adv/hoc/Property';
@@ -48,7 +49,9 @@ function App() {
       {/* <RenderControlClass></RenderControlClass>
       <RenderControlFunc></RenderControlFunc> */}
 
-      <MyRcFieldForm></MyRcFieldForm>
+      {/* <MyRcFieldForm></MyRcFieldForm> */}
+
+      <ReduxPage></ReduxPage>
     </div>
   );
 }
