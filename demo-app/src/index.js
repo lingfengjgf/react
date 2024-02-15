@@ -2,9 +2,21 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
+// import { Provider } from 'react-redux';
+import { Provider } from './adv/redux/myReactRedux';
+import store from './adv/redux/store';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
+// react-redux
+
+root.render(
+  <Provider store={store}>
+    <App />
+  </Provider>
+)
+
+/*
 root.render(
   <App />
   // StrictMode 会执行两遍生命周期
@@ -12,8 +24,4 @@ root.render(
   //   <App />
   // </React.StrictMode>
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+*/
