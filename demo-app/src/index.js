@@ -5,16 +5,23 @@ import App from './App';
 // import { Provider } from 'react-redux';
 import { Provider } from './adv/redux/myReactRedux';
 import store from './adv/redux/store';
+import ReactRouterPage from './pages/ReactRouterPage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
-// react-redux
+// raect-router
 
 root.render(
-  <Provider store={store}>
-    <App />
-  </Provider>
+  <ReactRouterPage />
 )
+
+// react-redux
+
+// root.render(
+//   <Provider store={store}>
+//     <App />
+//   </Provider>
+// )
 
 /*
 root.render(
