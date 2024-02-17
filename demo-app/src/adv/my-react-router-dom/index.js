@@ -4,7 +4,7 @@ import { match } from 'path-to-regexp';
 
 const LocationContext = createContext({});
 const NavigatorContext = createContext({});
-const MatchContext = createContext({});
+const RouterContext = createContext({});
 
 export function BrowserRouter({ children }) {
   let historyRef = useRef();
@@ -43,7 +43,7 @@ export function useNavigate() {
 }
 
 export function useMatch() {
-  return useContext(MatchContext).match;
+  return useContext(RouterContext).match;
 }
 
 export function useParams() {
@@ -89,8 +89,8 @@ function matchPath(currentPath, path) {
 export const Routes = ({ children }) => {
   const route = useRoutes(createRoutesFromChildren(children));
   let match = route.props.match;
-  const matchContext = useMemo(() => ({ match }), [match]);
-  return <MatchContext.Provider value={matchContext}>{route}</MatchContext.Provider>;
+  const routerContext = useMemo(() => ({ match }), [match]);
+  return <RouterContext.Provider value={routerContext}>{route}</RouterContext.Provider>;
 };
 
 // 将嵌套的<Route />组件转成树
