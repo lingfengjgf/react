@@ -1,13 +1,17 @@
-import { Component } from "react";
 import { updateFunctionComponent, updateFragmentComponent, updateHostComponent, updateClassComponent } from "./ReactFiberReconciler";
-import { isFn, isStr } from "./utils";
+import { Placement, Update, isFn, isStr, updateNode } from "./utils";
+import { scheduleCallback, shouldYield } from "./scheduler";
 
 // work in progress 当前正在工作的
 let wipRoot = null;
 let nextUnitOfWork = null;
 export function scheduleUpdateOnFiber(fiber) {
+  fiber.alternate = {...fiber};
+
   wipRoot = fiber;
   nextUnitOfWork = wipRoot;
+
+  scheduleCallback(workLoop);
 }
 
 function perfornUnitOfWork(wip) {
@@ -42,8 +46,8 @@ function perfornUnitOfWork(wip) {
   return null;
 }
 
-function workLoop(IdleDeadline) {
-  while (nextUnitOfWork && IdleDeadline.timeRemaining() > 0) {
+function workLoop() {
+  while (nextUnitOfWork && !shouldYield()) {
     nextUnitOfWork = perfornUnitOfWork(nextUnitOfWork);
   }
 
@@ -54,7 +58,7 @@ function workLoop(IdleDeadline) {
 }
 
 function commitRoot() {
-  commitWoker(wipRoot.child);
+  isFn(wipRoot.type) ? commitWoker(wipRoot) : commitWoker(wipRoot.child);
 }
 
 function commitWoker(wip) {
@@ -64,10 +68,16 @@ function commitWoker(wip) {
 
   // commit自己
   const parentNode = getParentNode(wip.return);
-  const { stateNode } = wip;
-  if (stateNode) {
+  const { flags, stateNode } = wip;
+  if (flags & Placement && stateNode) {
     parentNode.appendChild(stateNode);
   }
+
+  if (flags & Update && stateNode) {
+   updateNode(stateNode, wip.alternate.props, wip.props);
+  }
+
+
   // commit child
   commitWoker(wip.child);
 
@@ -85,4 +95,4 @@ function getParentNode(wip) {
   }
 }
 
-requestIdleCallback(workLoop);
+// requestIdleCallback(workLoop);
