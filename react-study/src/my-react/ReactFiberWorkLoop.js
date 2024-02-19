@@ -61,20 +61,53 @@ function commitRoot() {
   isFn(wipRoot.type) ? commitWoker(wipRoot) : commitWoker(wipRoot.child);
 }
 
+function invokeHooks(wip) {
+  const { updateQueueOfEffect, updateQueueOfLayout } = wip;
+
+  if (updateQueueOfLayout) {
+    for (let i = 0; i < updateQueueOfLayout.length; i++) {
+      const effect = updateQueueOfLayout[i];
+      effect.create();
+    }
+  }
+
+  if (updateQueueOfEffect) {
+    for (let i = 0; i < updateQueueOfEffect.length; i++) {
+      const effect = updateQueueOfEffect[i];
+      scheduleCallback(() => {effect.create()});
+    }
+  }
+}
+
 function commitWoker(wip) {
   if (!wip) {
     return ;
   }
 
+  if (isFn(wip.type)) {
+    invokeHooks(wip);
+  }
+
   // commit自己
   const parentNode = getParentNode(wip.return);
   const { flags, stateNode } = wip;
+
   if (flags & Placement && stateNode) {
-    parentNode.appendChild(stateNode);
+    let hasSiblingNode = foundSiblingNode(wip, parentNode);
+    if (hasSiblingNode) {
+      parentNode.insertBefore(stateNode, hasSiblingNode);
+    } else {
+      parentNode.appendChild(stateNode);
+    }
   }
 
   if (flags & Update && stateNode) {
    updateNode(stateNode, wip.alternate.props, wip.props);
+  }
+
+  // 检查wip有没有要删除的节点
+  if (wip.deletions) {
+    commitDeletions(wip.deletions, stateNode || parentNode);
   }
 
 
@@ -85,6 +118,21 @@ function commitWoker(wip) {
   commitWoker(wip.sibling);
 }
 
+// 找后面最近的有dom节点的fiber
+function foundSiblingNode(fiber, parentNode) {
+  let siblingHasNode = fiber.sibling;
+  let node = null;
+  while (siblingHasNode) {
+    node = siblingHasNode.stateNode;
+    if (node && parentNode.contains(node)) {
+      return node;
+    }
+    siblingHasNode = siblingHasNode.sibling;
+  }
+
+  return null;
+}
+
 function getParentNode(wip) {
   while (wip) {
     if (wip.stateNode) {
@@ -92,6 +140,21 @@ function getParentNode(wip) {
     }
 
     wip = wip.return;
+  }
+}
+
+function getStateNode(fiber) {
+  while (!fiber.stateNode) {
+    fiber = fiber.child;
+  }
+
+  return fiber.stateNode;
+}
+
+function commitDeletions(deletions, parentNode) {
+  for (let i = 0; i < deletions.length; i++) {
+    const element = deletions[i];
+    parentNode.removeChild(getStateNode(element));
   }
 }
 

@@ -1,6 +1,6 @@
-import { createFiber } from "./createFiber";
+import { reconcileChildren } from "./ReactChildFiber";
 import { renderHooks } from "./hooks";
-import { Update, isArray, isStringOrNumber, updateNode } from "./utils";
+import { updateNode } from "./utils";
 
 export function updateHostComponent(wip) {
 
@@ -41,45 +41,4 @@ export function updateFragmentComponent(wip) {
   // 协调子节点
   reconcileChildren(wip, wip.props.children);
 
-}
-
-function reconcileChildren(returnFiber, children) {
-
-  if (isStringOrNumber(children)) {
-    // 文本内容不创建fiber
-    return ;
-  }
-  const newChildren = isArray(children) ? children : [children];
-  let previousNewFiber = null;
-  let oldFiber = returnFiber.alternate && returnFiber.alternate.child;
-  for (let i = 0; i < newChildren.length; i++) {
-    const newChild = newChildren[i];
-    const newFiber = createFiber(newChild, returnFiber);
-
-    const same = sameNode(newFiber, oldFiber);
-
-    if (same) {
-      Object.assign(newFiber, {
-        alternate: oldFiber,
-        flags: Update,
-        stateNode: oldFiber.stateNode
-      })
-    }
-
-    if (oldFiber) {
-      oldFiber = oldFiber.sibling;
-    }
-
-    if (previousNewFiber === null) {
-      returnFiber.child = newFiber; // 头节点
-    } else {
-      previousNewFiber.sibling = newFiber;
-    }
-
-    previousNewFiber = newFiber;
-  }
-}
-
-function sameNode(a, b) {
-  return a && b && a.key === b.key && a.type === b.type;
 }
