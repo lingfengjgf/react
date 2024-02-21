@@ -12,8 +12,4 @@ function render(vnode, container) {
   scheduleUpdateOnFiber(fiberRoot);
 }
 
-function isString(s) {
-  return typeof s === "string";
-}
-
 export default {render};

@@ -180,52 +180,6 @@ function mapRemainingChildren(currentFirstChild) {
   return existingChildren;
 }
 
-// export function reconcileChildren(returnFiber, children) {
-
-//   if (isStringOrNumber(children)) {
-//     // 文本内容不创建fiber
-//     return ;
-//   }
-//   const newChildren = isArray(children) ? children : [children];
-//   let previousNewFiber = null;
-//   let oldFiber = returnFiber.alternate && returnFiber.alternate.child;
-//   for (let i = 0; i < newChildren.length; i++) {
-//     const newChild = newChildren[i];
-
-//     if (newChild === null) {
-//       continue ;
-//     }
-//     const newFiber = createFiber(newChild, returnFiber);
-
-//     const same = sameNode(newFiber, oldFiber);
-
-//     if (same) {
-//       Object.assign(newFiber, {
-//         alternate: oldFiber,
-//         flags: Update,
-//         stateNode: oldFiber.stateNode
-//       })
-//     }
-
-//     if (!same && oldFiber) {
-//       // 删除子节点
-//       deleteChild(returnFiber, oldFiber);
-//     }
-
-//     if (oldFiber) {
-//       oldFiber = oldFiber.sibling;
-//     }
-
-//     if (previousNewFiber === null) {
-//       returnFiber.child = newFiber; // 头节点
-//     } else {
-//       previousNewFiber.sibling = newFiber;
-//     }
-
-//     previousNewFiber = newFiber;
-//   }
-// }
-
 function sameNode(a, b) {
   return a && b && a.key === b.key && a.type === b.type;
 }

@@ -30,8 +30,6 @@ export function is(x, y) {
     (x === y && (x !== 0 || 1 / x === 1 / y)) || (x !== x && y !== y) // eslint- disable-line no-self-compare
   );
 }
-const objectIs = typeof Object.is === "function" ? Object.is : is;
-
 // 更新原生标签的属性，如className、href、id、（style、事件）等
 export function updateNode(node, prevVal, nextVal) {
   Object.keys(prevVal)
