@@ -1,6 +1,8 @@
 import React, { FC } from "react";
 import { ZHRouter, router } from "../../router";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
+import { BellIcon } from "@heroicons/react/24/outline";
+import Search from "../Search";
 
 type Props = {};
 
@@ -21,15 +23,42 @@ type NavLinkRenderProps = {
   isPending?: boolean;
 }
 
-const getNavStyle = ({ isActive }: NavLinkRenderProps) => {
-  return "hover:text-black mx-4 h-full py-3.5 transition-all " + 
-  ( isActive ? "font-extrabold text-black border-b-4 border-blue-600" : "text-gray-400" )
+const NavTab: FC<NavProps> = ({ navs }) => {
+  const location = useLocation();
+
+  const getParentPath = () => {
+    let parentPath;
+    router.forEach(item => {
+      (item.children || []).forEach((subItem: { path: string; }) => {
+        if (subItem.path && location.pathname.includes(subItem.path)) {
+          parentPath = item.path;
+        }
+      })
+    })
+    return parentPath;
+  }
+
+  return (
+    <div>
+      {navs?.map(item => 
+        <NavLink key={item?.path} to={ item.path || "/"} className={({ isActive }: NavLinkRenderProps) => {
+          return "hover:text-black mx-4 h-full py-3.5 transition-all " + 
+          ((isActive || getParentPath() === item.path) ? "font-extrabold text-black border-b-4 border-blue-600" : "text-gray-400" )
+        }}>{item?.title}</NavLink>
+      )}
+    </div>
+  )
 }
 
-const NavTab: FC<NavProps> = ({ navs }) => <div>
-  {
-    navs?.map(item => <NavLink key={item?.path} to={ item.path || "/"} className={getNavStyle}>{item?.title}</NavLink>)
-  }
+const MenuAlarm = () => <div className="flex mr-10 gap-4">
+  <div className="flex flex-col justify-center items-center">
+    <BellIcon className="h-5 w-5 text-gray-400 fill-gray-400" />
+    <span className=" text-gray-400 text-xs">消息</span>
+  </div>
+  <div className="flex flex-col justify-center items-center">
+    <BellIcon className="h-5 w-5 text-gray-400 fill-gray-400" />
+    <span className=" text-gray-400 text-xs">私信</span>
+  </div>
 </div>
 
 export default function Nav(props: Props) {
@@ -41,8 +70,8 @@ export default function Nav(props: Props) {
             <Logo />
             <NavTab navs={router} />
           </div>
-          <div>search</div>
-          <div>alarm</div>
+          <Search />
+          <MenuAlarm />
         </div>
       </div>
     </div>

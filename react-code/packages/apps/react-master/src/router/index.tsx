@@ -1,9 +1,10 @@
 import React from "react";
 import { Outlet, RouteObject } from "react-router-dom";
 import Home from "../pages/home";
-
+import RecommandList from "../pages/home/Tabs/RecommandList";
 export interface extraBizObject {
   title?: string;
+  children?: any
 }
 
 export type ZHRouter = Array<RouteObject & extraBizObject>;
@@ -12,10 +13,10 @@ export const router: ZHRouter = [
   {
     path: "/", element: <Home />, title: "首页",
     children: [
-      { path: "", element: <div>推荐</div> },
-      { path: "follow", element: <div>关注</div> },
-      { path: "hot", element: <div>热榜</div> },
-      { path: "zvideo", element: <div>视频</div> },
+      { path: "follow", element: <div>关注</div>, title: "关注" },
+      { path: "", element: <RecommandList />, title: "推荐" },
+      { path: "hot", element: <div>热榜</div>, title: "热榜" },
+      { path: "zvideo", element: <div>视频</div>, title: "视频" },
     ]
   },
   {
