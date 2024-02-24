@@ -4,7 +4,10 @@ import { NavLink, useLocation } from "react-router-dom";
 import { BellIcon } from "@heroicons/react/24/outline";
 import Search from "../Search";
 
-type Props = {};
+type Props = {
+  className: string;
+  hide: boolean;
+};
 
 const Logo = () => <div className=" px-2">
   <svg viewBox="0 0 64 30" fill="#1772F6" width="64" height="30" className="css-1hlrcxk">
@@ -15,7 +18,8 @@ const Logo = () => <div className=" px-2">
 </div>
 
 interface NavProps {
-  navs?: ZHRouter
+  navs?: ZHRouter;
+  isFristLevel?: boolean;
 }
 
 type NavLinkRenderProps = {
@@ -23,7 +27,7 @@ type NavLinkRenderProps = {
   isPending?: boolean;
 }
 
-const NavTab: FC<NavProps> = ({ navs }) => {
+const NavTab: FC<NavProps> = ({ navs, isFristLevel }) => {
   const location = useLocation();
 
   const getParentPath = () => {
@@ -43,7 +47,7 @@ const NavTab: FC<NavProps> = ({ navs }) => {
       {navs?.map(item => 
         <NavLink key={item?.path} to={ item.path || "/"} className={({ isActive }: NavLinkRenderProps) => {
           return "hover:text-black mx-4 h-full py-3.5 transition-all " + 
-          ((isActive || getParentPath() === item.path) ? "font-extrabold text-black border-b-4 border-blue-600" : "text-gray-400" )
+          ((isActive || ( isFristLevel && getParentPath() === item.path)) ? "font-extrabold text-black border-b-4 border-blue-600" : "text-gray-400" )
         }}>{item?.title}</NavLink>
       )}
     </div>
@@ -61,17 +65,26 @@ const MenuAlarm = () => <div className="flex mr-10 gap-4">
   </div>
 </div>
 
-export default function Nav(props: Props) {
+export default function Nav({ className, hide }: Props) {
+  const tabs = router[0].children;
   return (
-    <div className=" bg-white w-screen shadow-lg">
+    <div className={" bg-white w-screen shadow-lg overflow-hidden h-14" + className}>
       <div className=" max-w-6xl mx-auto my-0 flex justify-center w-full">
-        <div className=" h-14 w-full flex justify-between items-center min-w-max">
-          <div className="flex items-center">
-            <Logo />
-            <NavTab navs={router} />
+      <div className={`w-full flex flex-col relative justify-between items-center min-w-max transition-all duration-300 ${hide ? "top-0": "-top-14"} `}>
+          <div className='w-full h-14 flex justify-between items-center min-w-max '> 
+            <div className='flex items-center'>
+              <Logo />
+              <NavTab navs={router} isFristLevel={true} />
+            </div>
+            <Search />
+            <MenuAlarm />
           </div>
-          <Search />
-          <MenuAlarm />
+          <div className='w-full h-14 flex justify-between items-center min-w-max '>
+            <div className='flex items-center'>
+              <Logo />
+              <NavTab navs={tabs} />
+            </div>
+          </div>
         </div>
       </div>
     </div>
