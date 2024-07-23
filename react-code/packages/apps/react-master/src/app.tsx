@@ -8,6 +8,9 @@ type Props = {}
 const Routes = () => useRoutes(router);
 
 function App({}: Props) {
+  console.log('test');
+  console.log('router：',router);
+  
   return (
     <HashRouter>
       <Routes />

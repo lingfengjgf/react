@@ -2,6 +2,7 @@ const { merge } = require("webpack-merge");
 const baseConfig = require("./webpack.base");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
+const ZipPlugin = require("../zipPlugin");
 
 module.exports = merge(baseConfig(false), {
   // 生产环境
@@ -37,5 +38,8 @@ module.exports = merge(baseConfig(false), {
         }
       }
     }
-  }
+  },
+  plugins:[
+    new ZipPlugin({ filename: 'dist.zip'})
+  ]
 })
